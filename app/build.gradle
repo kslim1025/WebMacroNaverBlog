@@ -1,0 +1,102 @@
+apply plugin: 'com.android.application'
+
+// ------------------------------------------------------
+// Android Annotations : http://androidannotations.org/
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        // replace with the current version of the Android plugin
+        classpath 'com.android.tools.build:gradle:1.2.3'
+        // replace with the current version of the android-apt plugin
+        classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
+    }
+}
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    /*
+    maven {
+        // sping android : http://projects.spring.io/spring-android/
+        url 'http://repo.spring.io/milestone'
+    }
+    */
+}
+
+apply plugin: 'android-apt'
+def AAVersion = '3.3.1'
+
+dependencies {
+    apt "org.androidannotations:androidannotations:$AAVersion"
+    compile "org.androidannotations:androidannotations-api:$AAVersion"
+    // spring-android : http://projects.spring.io/spring-android/
+    compile 'org.springframework.android:spring-android-rest-template:2.0.0.M1'
+}
+
+apt {
+    arguments {
+        androidManifestFile variant.outputs[0].processResources.manifestFile
+        // if you have multiple outputs (when using splits), you may want to have other index than 0
+
+        resourcePackageName 'net.asamaru.webmacronaverblog'
+
+        // If you're using Android NBS flavors you should use the following line instead of hard-coded packageName
+        // resourcePackageName android.defaultConfig.packageName
+
+        // You can set optional annotation processing options here, like these commented options:
+        // logLevel 'INFO'
+        // logFile '/var/log/aa.log'
+    }
+}
+// ------------------------------------------------------
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "net.asamaru.webmacronaverblog"
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    packagingOptions {
+        // signingConfig signingConfigs.release
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/notice.txt'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.2.0'
+    // http://android-developers.blogspot.kr/2015/05/android-design-support-library.html
+    compile 'com.android.support:design:22.2.0'
+    // gson : https://code.google.com/p/google-gson/
+    compile 'com.google.code.gson:gson:2.3.1'
+    // AndroidViewAnimations : https://github.com/daimajia/AndroidViewAnimations
+    compile 'com.nineoldandroids:library:2.4.0'
+    compile 'com.daimajia.easing:library:1.0.1@aar'
+    compile 'com.daimajia.androidanimations:library:1.1.3@aar'
+    // otto(eventbus) : http://square.github.io/otto/, 한글 : https://medium.com/@LIP/otto-186e676cf1b
+    compile 'com.squareup:otto:1.3.6'
+    // picasso : http://square.github.io/picasso/
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    // android-iconify : http://joanzapata.com/android-iconify/
+    compile 'com.joanzapata.android:android-iconify:1.0.8'
+    // realm : http://realm.io/kr/
+    compile 'io.realm:realm-android:0.80.1'
+    // Logger : https://github.com/orhanobut/logger
+    compile 'com.orhanobut:logger:1.3'
+    // Android Asynchronous Http Client : http://loopj.com/android-async-http/
+    compile 'com.loopj.android:android-async-http:1.4.7'
+}
